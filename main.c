@@ -137,16 +137,24 @@ main(int argc, char **argv)
 	}
 	sockname = *argv;
 	
-	// if sockname is not absolute, and $DTACH is set, mount inside $DTACH
-    dtach_env = getenv("DTACH");
-    if (strncmp(sockname, "/", 1) && (dtach_env != NULL)) {
-	    // len of new string, plus another /
-        int maxlen = strlen(sockname) + strlen(dtach_env) + 1;
-        char * newsock = calloc(maxlen, sizeof(char));
-        strncpy(newsock, dtach_env, strlen(dtach_env));
-        strncat(newsock, "/", 1);
-        strncat(newsock, sockname, strlen(sockname));
-        sockname = newsock;
+	/*
+	 * Ignore $DTACH even if set if the given socket name is:
+	 * + an absolute path
+	 * + an explicit path in the current working directory
+	 * + a path with a directory traversal (..)
+	 */
+	dtach_env = getenv("DTACH");
+    int not_abs = strncmp(sockname, "/", 1);
+    int not_cwd = strncmp(sockname, "./", 2);
+    int not_traversal = !strstr(sockname, "..");
+	if (not_abs && not_cwd && not_traversal && dtach_env) {
+		// len of new string, plus another /
+		int maxlen = strlen(sockname) + strlen(dtach_env) + 1;
+		char * newsock = calloc(maxlen, sizeof(char));
+		strncpy(newsock, dtach_env, strlen(dtach_env));
+		strncat(newsock, "/", 1);
+		strncat(newsock, sockname, strlen(sockname));
+		sockname = newsock;
 	}
 	++argv; --argc;
 
