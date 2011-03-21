@@ -66,6 +66,14 @@ will likely encounter problems if your terminals have different window
 sizes. Pressing ^L (Ctrl-L) will reset the window size of the program to
 match the current terminal.
 
+If the environment variable DTACH is set, it will be used as a common socket
+path, i.e. if $DTACH = /tmp/dtach and dtach is invoked via:
+
+    $ dtach -A foo ...
+
+then the socket will be created at /tmp/dtach/foo. If the socket name is
+absolute, the value in $DTACH is ignored.
+
 3. DETACHING FROM THE SESSION
 
 By default, dtach scans the keyboard input looking for the detach character.
@@ -113,6 +121,10 @@ When creating a new session (with the -c or -A modes), the specified
 method is used as the default redraw method for the session.
 
 6. CHANGES
+
+The changes in version 0.8-at are:
+- The inclusion of the $DTACH environment variable, that can be used as the 
+  common path for all created sockets.
 
 The changes in version 0.8 are:
 - When using dtach -A or dtach -c, the master will now wait until the client
@@ -176,6 +188,8 @@ The changes in version 0.3 are:
 
 dtach is (C)Copyright 2004-2008 Ned T. Crigler, and is under the GNU General
 Public License.
+
+Fork to add $DTACH by alexandru totolici at https://github.com/totolici/dtach
 
 Comments and suggestions about dtach are welcome, and can be sent to
 the author at: <crigler@users.sourceforge.net>.
