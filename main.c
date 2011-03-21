@@ -31,6 +31,8 @@ const char copyright[] = "dtach - version " PACKAGE_VERSION "(C)Copyright 2004-2
 char *progname;
 /* The name of the passed in socket. */
 char *sockname;
+/* The value of $DTACH, if set. */
+char * dtach_env;
 /* The character used for detaching. Defaults to '^\' */
 int detach_char = '\\' - 64;
 /* 1 if we should not interpret the suspend character. */
@@ -72,6 +74,13 @@ usage()
 		"\t\t   ctrl_l: Send a Ctrl L character to the program.\n"
 		"\t\t    winch: Send a WINCH signal to the program.\n"
 		"  -z\t\tDisable processing of the suspend key.\n"
+		"\nIf the environment variable $DTACH is set, the location\n"
+		"it points to will be used as the socket folder. For example:\n"
+		"\tDTACH=/tmp/dtach dtach -A foo ...\n"
+		"will connect the socket /tmp/dtach/foo. You can override this by\n"
+		"providing an absolute path for the socket, i.e.:\n"
+		"\tDTACH=/tmp/dtach dtach -A /tmp/foo ...\n"
+		"will create the socket at /tmp/foo, not /tmp/dtach/tmp/foo.\n"
 		"\nReport any bugs to <" PACKAGE_BUGREPORT ">.\n",
 		PACKAGE_VERSION, __DATE__, __TIME__);
 	exit(0);
@@ -127,6 +136,18 @@ main(int argc, char **argv)
 		return 1;
 	}
 	sockname = *argv;
+	
+	// if sockname is not absolute, and $DTACH is set, mount inside $DTACH
+    dtach_env = getenv("DTACH");
+    if (strncmp(sockname, "/", 1) && (dtach_env != NULL)) {
+	    // len of new string, plus another /
+        int maxlen = strlen(sockname) + strlen(dtach_env) + 1;
+        char * newsock = calloc(maxlen, sizeof(char));
+        strncpy(newsock, dtach_env, strlen(dtach_env));
+        strncat(newsock, "/", 1);
+        strncat(newsock, sockname, strlen(sockname));
+        sockname = newsock;
+	}
 	++argv; --argc;
 
 	while (argc >= 1 && **argv == '-')
