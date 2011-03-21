@@ -122,7 +122,7 @@ method is used as the default redraw method for the session.
 
 6. CHANGES
 
-The changes in version 0.8-at.0 are:
+The changes in version 0.8-at.1 are:
 - The inclusion of the $DTACH environment variable, that can be used as the 
   common path for all created sockets.
 

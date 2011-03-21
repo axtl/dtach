@@ -1,20 +1,20 @@
 /*
-    dtach - A simple program that emulates the detach feature of screen.
-    Copyright (C) 2004-2008 Ned T. Crigler
+	dtach - A simple program that emulates the detach feature of screen.
+	Copyright (C) 2004-2008 Ned T. Crigler
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "dtach.h"
 
@@ -54,9 +54,9 @@ usage()
 	printf(
 		"dtach - version %s, compiled on %s at %s.\n"
 		"Usage: dtach -a <socket> <options>\n"
-		"       dtach -A <socket> <options> <command...>\n"
-		"       dtach -c <socket> <options> <command...>\n"
-		"       dtach -n <socket> <options> <command...>\n"
+		"		dtach -A <socket> <options> <command...>\n"
+		"		dtach -c <socket> <options> <command...>\n"
+		"		dtach -n <socket> <options> <command...>\n"
 		"Modes:\n"
 		"  -a\t\tAttach to the specified socket.\n"
 		"  -A\t\tAttach to the specified socket, or create it if it\n"
@@ -70,9 +70,9 @@ usage()
 		"  -E\t\tDisable the detach character.\n"
 		"  -r <method>\tSet the redraw method to <method>. The "
 		"valid methods are:\n"
-		"\t\t     none: Don't redraw at all.\n"
-		"\t\t   ctrl_l: Send a Ctrl L character to the program.\n"
-		"\t\t    winch: Send a WINCH signal to the program.\n"
+		"\t\t	  none: Don't redraw at all.\n"
+		"\t\t	ctrl_l: Send a Ctrl L character to the program.\n"
+		"\t\t	 winch: Send a WINCH signal to the program.\n"
 		"  -z\t\tDisable processing of the suspend key.\n"
 		"\nIf the environment variable $DTACH is set, the location\n"
 		"it points to will be used as the socket folder. For example:\n"
@@ -144,9 +144,9 @@ main(int argc, char **argv)
 	 * + a path with a directory traversal (..)
 	 */
 	dtach_env = getenv("DTACH");
-    int not_abs = strncmp(sockname, "/", 1);
-    int not_cwd = strncmp(sockname, "./", 2);
-    int not_traversal = !strstr(sockname, "..");
+	int not_abs = strncmp(sockname, "/", 1);
+	int not_cwd = strncmp(sockname, "./", 2);
+	int not_traversal = !strstr(sockname, "..");
 	if (not_abs && not_cwd && not_traversal && dtach_env) {
 		// len of new string, plus another /
 		int maxlen = strlen(sockname) + strlen(dtach_env) + 1;
