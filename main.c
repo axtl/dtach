@@ -144,17 +144,36 @@ main(int argc, char **argv)
 	 * + a path with a directory traversal (..)
 	 */
 	dtach_env = getenv("DTACH");
-	int not_abs = strncmp(sockname, "/", 1);
-	int not_cwd = strncmp(sockname, "./", 2);
-	int not_traversal = !strstr(sockname, "..");
-	if (not_abs && not_cwd && not_traversal && dtach_env) {
-		// len of new string, plus another /
-		int maxlen = strlen(sockname) + strlen(dtach_env) + 1;
-		char * newsock = calloc(maxlen, sizeof(char));
-		strncpy(newsock, dtach_env, strlen(dtach_env));
-		strncat(newsock, "/", 1);
-		strncat(newsock, sockname, strlen(sockname));
-		sockname = newsock;
+	if (dtach_env) {
+		int not_abs = strncmp(sockname, "/", 1);
+		int not_cwd = strncmp(sockname, "./", 2);
+		int not_traversal = !strstr(sockname, "..");
+		if (not_abs && not_cwd && not_traversal) {
+			// check if $DTACH exists yet
+			struct stat dloc;
+			if (!stat(dtach_env, &dloc)) {
+				if (!S_ISDIR(dloc.st_mode)) {
+					printf("%s: ", progname);
+					printf("$DTACH exists but is not a directory.\n");
+					printf("Either delete it or point $DTACH elsewhere.\n");
+					printf("$DTACH is: %s\n", dtach_env);
+					return 1;
+				}
+			}
+			else {
+				if (mkdir(dtach_env, 0755)) {
+					perror(dtach_env);
+					return 1;
+				}
+			}
+			// len of new string, plus another /
+			int maxlen = strlen(sockname) + strlen(dtach_env) + 1;
+			char * newsock = calloc(maxlen, sizeof(char));
+			strncpy(newsock, dtach_env, strlen(dtach_env));
+			strncat(newsock, "/", 1);
+			strncat(newsock, sockname, strlen(sockname));
+			sockname = newsock;
+		}
 	}
 	++argv; --argc;
 
