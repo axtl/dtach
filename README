@@ -122,6 +122,10 @@ method is used as the default redraw method for the session.
 
 6. CHANGES
 
+The changes in version 0.8-at.2 are:
+- Check for the existence of $DTACH before trying to create a socket there.
+  Useful if $DTACH is a subfolder in /tmp/ that gets deleted at reboot.
+
 The changes in version 0.8-at.1 are:
 - The inclusion of the $DTACH environment variable, that can be used as the 
   common path for all created sockets.

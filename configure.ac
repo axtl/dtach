@@ -1,5 +1,5 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT(dtach, 0.8-at.1, crigler@users.sourceforge.net)
+AC_INIT(dtach, 0.8-at.2, crigler@users.sourceforge.net)
 AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR(main.c)
 AC_CONFIG_HEADER(config.h)
